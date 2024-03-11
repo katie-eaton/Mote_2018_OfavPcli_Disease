@@ -1,0 +1,35 @@
+
+```{r}
+Pcli_correlations <- read.csv("Pcli_correlations.csv")
+Pcli_correlations$Treatment <- factor(Pcli_correlations$Treatment, levels = c("Control", "OA", "OW", "OAOW"))
+```
+
+#Relative risk/symbiont composition scatterplot and correlation analysis (Supp Fig 3)
+```{r}
+Pcli_correlations$Genotype<-as.factor(Pcli_correlations$Genotype)
+Pcli_correlations$Treatment<-as.factor(Pcli_correlations$Treatment)
+g1 <- ggplot(Pcli_correlations, aes(x=Median.RR, y=Ratio, fill=Treatment, color=Treatment)) + geom_point(size=1.5) + 
+  scale_color_manual(values = c("Control" = "black", "OA" = "blue", "OW" = "pink", "OAOW" = "orange"))+
+  xlab("Median Relative Risk") + ylab("Ratio")
+g2 <- g1 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))
+g2
+ggsave("rr.ratio.pcli.png", width = 5, height = 3, dpi = 300)
+rr.ratio<- cor.test(Pcli_correlations$Median.RR, Pcli_correlations$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
+
+#Photochemical efficiency end value/symbiont composition scatterplot and correlation analysis (Supp Fig 4)
+```{r}
+Pcli_correlations$Genotype<-as.factor(Pcli_correlations$Genotype)
+Pcli_correlations$Treatment<-as.factor(Pcli_correlations$Treatment)
+g3 <- ggplot(Pcli_correlations, aes(x=Fv.Fm.end, y=Ratio, fill=Treatment, color=Treatment)) + geom_point(size=1.5) + 
+  scale_color_manual(values = c("Control" = "black", "OA" = "blue", "OW" = "pink", "OAOW" = "orange"))+
+  xlab("Photochemical efficiency end value") + ylab("Ratio")
+g4 <- g3 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))
+g2
+ggsave("fvfm.ratio.pcli.png", width = 5, height = 3, dpi = 300)
+fvfm.ratio<- cor.test(Pcli_correlations$Fv.Fm.end, Pcli_correlations$Ratio, 
+                    method = "spearman", exact=FALSE)
+fvfm.ratio
+```

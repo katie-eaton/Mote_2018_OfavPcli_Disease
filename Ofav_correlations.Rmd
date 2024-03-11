@@ -1,0 +1,33 @@
+
+```{r}
+Ofav_correlations <- read.csv("Ofav_correlations.csv")
+Ofav_correlations$Treatment <- factor(Ofav_correlations$Treatment, levels = c("Control", "OA", "OW", "OAOW"))
+```
+
+#Growth/photochemical efficiency scatterplot and correlation analysis (Supp Fig 1)
+```{r}
+Ofav_correlations$Genotype<-as.factor(Ofav_correlations$Genotype)
+Ofav_correlations$Treatment<-as.factor(Ofav_correlations$Treatment)
+g1 <- ggplot(Ofav_correlations, aes(x=Fv.Fm.end, y=BW.change, fill=Treatment, color=Treatment)) + geom_point(size=1.5) + 
+  scale_color_manual(values = c("Control" = "black", "OA" = "blue", "OW" = "pink", "OAOW" = "orange"))+
+  xlab(expression("Growth over two months"~(g/cm^2))) + ylab("Photochemical efficiency end value")
+g2 <- g1 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))
+g2
+ggsave("FvFm.BW.Ofav.png", width = 5, height = 3, dpi = 300)
+growth.fvfm <- cor.test(Ofav_correlations$BW.change, Ofav_correlations$Fv.Fm.change, 
+                    method = "spearman", exact=FALSE)
+growth.fvfm
+```
+
+#Relative risk/symbiont composition scatterplot and correlation analysis (Supp Fig 2)
+```{r}
+g3 <- ggplot(Ofav_correlations, aes(x=median.RR, y=Ratio, fill=Treatment, color=Treatment)) + geom_point(size=2) +
+  scale_color_manual(values = c("Control" = "black", "OA" = "blue", "OA.OW" = "orange", "OW" = "pink"))+
+  xlab("Median Relative Risk") + ylab("Ratio")
+g4 <- g3 + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))
+g4
+ggsave("symbio.Ofav.png", width = 4, height = 2, dpi = 300)
+rr.ratio <- cor.test(Ofav_correlations$median.RR, Ofav_correlations$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
