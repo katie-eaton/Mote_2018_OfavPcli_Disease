@@ -1,0 +1,47 @@
+
+```{r}
+Ofav_correlations <- read.csv("Ofav_correlations.csv")
+Ofav_correlations$Treatment <- factor(Ofav_correlations$Treatment, levels = c("Control", "OA", "OW", "OAOW"))
+Ofav_correlations$Genotype<- factor(Ofav_correlations$Genotype, levels = c("OF1", "OF125", "OF126", "OF2", "OF27", "OF3", "OF5", "OF61", "OF8", "OF11"))
+```
+
+#Relative risk/symbiont composition scatterplot and correlation analysis (Fig 5)
+```{r}
+g1 <- ggplot(Ofav_correlations, aes(x=median.RR, y=Ratio, fill=Genotype, color=Genotype, shape=Treatment)) + geom_point(size=2, position=position_jitter(h=0.02, w=0.02)) +
+  scale_color_manual(values = c("OF1" = "#2F357CFF", "OF2" = "turquoise", "OF11" = "orange", "OF125" =  "#00EE76", "OF126" = "#E48171FF", "OF27" = "#ADA43BFF", "OF3" = "#FFE93F", "OF5" = "#BF3729FF", "OF61" = "#355828FF", "OF8" = "darkorchid"))+
+  xlab("Median Relative Risk") + ylab("Ratio") + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))+scale_y_continuous(breaks=seq(0,1,by=0.15))
+g1
+ggsave("Figure5.png", width = 7, height = 5, dpi = 300)
+```
+
+#Spearman correlation treatments combined
+```{r}
+rr.ratio <- cor.test(Ofav_correlations$median.RR, Ofav_correlations$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
+
+#Spearman correlation by treatment
+```{r}
+Control <- subset(Ofav_correlations, Treatment == "Control")
+OA <- subset(Ofav_correlations, Treatment == "OA")
+OW <- subset(Ofav_correlations, Treatment == "OW")
+OAOW <- subset(Ofav_correlations, Treatment == "OAOW")
+
+rr.ratio <- cor.test(Control$median.RR, Control$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OAOW$median.RR, OAOW$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OA$median.RR, OA$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OW$median.RR, OW$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
+
