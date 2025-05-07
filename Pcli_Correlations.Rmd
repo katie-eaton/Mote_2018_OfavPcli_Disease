@@ -1,0 +1,47 @@
+
+```{r}
+Pcli_correlations <- read.csv("Pcli_correlations.csv")
+Pcli_correlations$Treatment <- factor(Pcli_correlations$Treatment, levels = c("Control", "OA", "OW", "OAOW"))
+Pcli_correlations$Genotype<-as.factor(Pcli_correlations$Genotype)
+```
+
+#Relative risk/symbiont composition scatterplot and correlation analysis (Figure 6)
+```{r}
+g1 <- ggplot(Pcli_correlations, aes(x=Median.RR, y=Ratio, fill=Genotype, color=Genotype, shape=Treatment)) + geom_point(size=2, position=position_jitter(h=0.05,w=0.05)) +
+  scale_color_manual(values = c("PC12" = "blue", "PC17" = "orange", "PC3" = "pink"))+
+  xlab("Median Relative Risk") + ylab("Ratio") + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(text=element_text(size=10,  family="serif"))
+g1
+ggsave("Figure6.png", width = 6, height = 4, dpi = 300)
+```
+
+#Spearman correlation treatments combined
+```{r}
+rr.ratio <- cor.test(Pcli_correlations$Median.RR, Pcli_correlations$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
+
+#Spearman correlation by treatment
+```{r}
+Control <- subset(Pcli_correlations, Treatment == "Control")
+OA <- subset(Pcli_correlations, Treatment == "OA")
+OW <- subset(Pcli_correlations, Treatment == "OW")
+OAOW <- subset(Pcli_correlations, Treatment == "OAOW")
+
+rr.ratio <- cor.test(Control$Median.RR, Control$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OAOW$Median.RR, OAOW$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OA$Median.RR, OA$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+
+rr.ratio <- cor.test(OW$Median.RR, OW$Ratio, 
+                    method = "spearman", exact=FALSE)
+rr.ratio
+```
+
